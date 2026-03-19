@@ -1,0 +1,28 @@
+[project]
+name = "evoskill"
+version = "0.1.0"
+description = "Experience-driven lifelong skill learning for AI agents"
+requires-python = ">=3.10"
+
+dependencies = [
+    "jinja2>=3.1",
+    "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+# OpenAI embeddings / LLM — no extra packages needed (uses urllib)
+openai = []
+
+# Local BGE-M3 embeddings (choose one)
+flagembedding = ["FlagEmbedding>=1.2"]
+sentence-transformers = ["sentence-transformers>=3.0"]
+
+[project.scripts]
+evoskill = "main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["evoskill*"]
+
+[tool.setuptools.package-data]
+"evoskill.agent_runtime" = ["templates/*.j2"]

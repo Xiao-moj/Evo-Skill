@@ -1,0 +1,33 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "[Install] Installing ClaudeCode CLI..."
+
+if command -v apk &> /dev/null; then
+    echo "[Install] Detected Alpine, installing curl and bash..."
+    apk add --no-cache curl bash
+elif command -v apt-get &> /dev/null; then
+    echo "[Install] Detected Debian/Ubuntu, installing curl..."
+    apt-get update
+    apt-get install -y curl
+fi
+
+echo "[Install] Downloading and installing ClaudeCode..."
+{% if version %}
+curl -fsSL https://claude.ai/install.sh | bash -s -- {{ version }}
+{% else %}
+curl -fsSL https://claude.ai/install.sh | bash
+{% endif %}
+
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+export PATH="$HOME/.local/bin:$PATH"
+
+if command -v claude &> /dev/null; then
+    echo "[Install] ClaudeCode installed successfully!"
+    claude --version
+else
+    echo "[Install] ERROR: ClaudeCode installation failed!"
+    exit 1
+fi
+
+echo "[Install] Installation complete!"

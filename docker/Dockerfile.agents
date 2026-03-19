@@ -1,0 +1,47 @@
+# ============================================================================
+# EvoSkill - Pre-built Agents Image
+# ============================================================================
+
+FROM python:3.11-slim
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    NVM_DIR=/root/.nvm \
+    NODE_VERSION=22
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        curl \
+        git \
+        ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash && \
+    . "$NVM_DIR/nvm.sh" && \
+    nvm install $NODE_VERSION && \
+    nvm use $NODE_VERSION && \
+    nvm alias default $NODE_VERSION
+
+RUN . "$NVM_DIR/nvm.sh" && \
+    ln -s "$NVM_DIR/versions/node/v$NODE_VERSION"*/bin/node /usr/local/bin/node && \
+    ln -s "$NVM_DIR/versions/node/v$NODE_VERSION"*/bin/npm /usr/local/bin/npm && \
+    ln -s "$NVM_DIR/versions/node/v$NODE_VERSION"*/bin/npx /usr/local/bin/npx
+
+RUN node --version && npm --version
+
+RUN . "$NVM_DIR/nvm.sh" && \
+    npm install -g @anthropic-ai/claude-code@latest && \
+    ln -sf "$NVM_DIR/versions/node/v$NODE_VERSION"*/bin/claude /usr/local/bin/claude && \
+    claude --version
+
+RUN . "$NVM_DIR/nvm.sh" && \
+    npm install -g @openai/codex@latest && \
+    ln -sf "$NVM_DIR/versions/node/v$NODE_VERSION"*/bin/codex /usr/local/bin/codex && \
+    codex --version
+
+WORKDIR /workspace
+
+LABEL maintainer="evoskill" \
+      description="Pre-built image with Claude Code and Codex CLI tools" \
+      version="1.0.0"
+
+CMD ["/bin/bash"]

@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+
+# Python cache / build
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Virtual env
+.venv/
+venv/
+
+# Local runtime data
+SkillBank/
+trail/
+
+# Local secrets
+.env
